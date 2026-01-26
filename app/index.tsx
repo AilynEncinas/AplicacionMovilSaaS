@@ -20,7 +20,7 @@ export default function LoginScreen() {
 
     setLoading(true);
     try {
-      const response = await axios.post('http://192.168.1.6:3000/api/login', {
+      const response = await axios.post('http://192.168.1.3:3000/api/login', { // Ajusta la URL según la ip de la computadora
         email: email.trim(),
         password: password
       });
