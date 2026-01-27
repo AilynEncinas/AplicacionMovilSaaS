@@ -1,12 +1,15 @@
-// app/_layout.tsx
+import { AuthProvider } from '@/src/context/AuthContext';
 import { Stack } from 'expo-router';
 
 export default function RootLayout() {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(auth)/index" /> 
-      <Stack.Screen name="(auth)/register" />
-      <Stack.Screen name="(dashboard)/report" />
-    </Stack>
+    <AuthProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(auth)/index" /> 
+        <Stack.Screen name="(auth)/register" />
+        <Stack.Screen name="(dashboard)/report" />
+        <Stack.Screen name="(dashboard)/products" />
+      </Stack>
+    </AuthProvider>
   );
 }

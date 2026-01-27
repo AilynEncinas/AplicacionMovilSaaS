@@ -8,14 +8,13 @@ const { width } = Dimensions.get('window');
 export const DrawerMenu = ({ visible, onClose }: { visible: boolean, onClose: () => void }) => {
   const router = useRouter();
 
-  // Actualizamos MenuItem para que use el path y navegue
   const MenuItem = ({ icon: Icon, label, path }: { icon: any, label: string, path?: string }) => (
     <TouchableOpacity 
       style={styles.menuItem} 
       onPress={() => {
-        onClose(); // Cerramos el menú
+        onClose();
         if (path) {
-          router.push(path as any); // Navegamos a la ruta
+          router.push(path as any);
         }
       }}
     >
@@ -34,8 +33,7 @@ export const DrawerMenu = ({ visible, onClose }: { visible: boolean, onClose: ()
           </View>
 
           <ScrollView style={styles.drawerScroll}>
-            {/* Las rutas no llevan el paréntesis del grupo (dashboard) */}
-            <MenuItem icon={Package} label="Producto" path="/products" />
+            <MenuItem icon={Package} label="Inventario" path="/products" />
             <MenuItem icon={BarChart3} label="Reportes" path="/report" />
             <MenuItem icon={Users} label="Clientes" />
             
@@ -49,7 +47,6 @@ export const DrawerMenu = ({ visible, onClose }: { visible: boolean, onClose: ()
               <Text style={styles.userName}>Daniela S.</Text>
             </View>
             
-            {/* Logout corregido: apunta a la raíz del grupo (auth) que es el login */}
             <TouchableOpacity onPress={() => router.replace('/(auth)')}>
               <LogOut size={20} color="#ef4444" />
             </TouchableOpacity>

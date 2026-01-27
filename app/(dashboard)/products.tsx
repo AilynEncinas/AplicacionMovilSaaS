@@ -1,6 +1,7 @@
 import { TopBar } from '@/components/navigation/TopBar';
 import { DrawerMenu } from '@/components/navigation/drawerMenu';
-import { useProducts } from '@/src/hooks/useProducts';
+import { useAuth } from '@/src/hooks/useAuth';
+import { Product, useProducts } from '@/src/hooks/useProducts';
 import { EyeOff } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
@@ -8,14 +9,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProductsScreen() {
   const [menuOpen, setMenuOpen] = useState(false);
-  
-  // Estos datos vendrán de tu AuthContext más adelante
-  const userRole = "admin"; // Prueba con "seller" para ver el cambio
-  const storeId = "tu_store_id"; 
+  const { user } = useAuth(); 
+
+  const storeId = user?.storeId || ""; 
+  const userRole = user?.role || "seller"; 
 
   const { products, loading, refresh } = useProducts(storeId, userRole);
 
-  const renderProduct = ({ item }: any) => (
+  const renderProduct = ({ item }: { item: Product }) => (
     <View style={[styles.productCard, !item.isActive && styles.inactiveCard]}>
       <View style={styles.productInfo}>
         <View style={styles.nameRow}>
@@ -42,7 +43,7 @@ export default function ProductsScreen() {
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>Inventario</Text>
-          <Text style={styles.subtitle}>Gestión de productos existentes</Text>
+          <Text style={styles.subtitle}>Mostrando productos de sucursal</Text>
         </View>
 
         {loading ? (
@@ -50,7 +51,7 @@ export default function ProductsScreen() {
         ) : (
           <FlatList
             data={products}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={renderProduct}
             contentContainerStyle={styles.list}
             refreshing={loading}
@@ -63,6 +64,7 @@ export default function ProductsScreen() {
   );
 }
 
+// ESTILOS
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8fafc' },
   content: { flex: 1, padding: 20 },
@@ -79,15 +81,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
   },
-  productInfo: {
-    flex: 1, 
-  },
+  productInfo: { flex: 1 },
+  nameRow: { flexDirection: 'row', alignItems: 'center' }, 
   inactiveCard: { backgroundColor: '#f1f5f9', opacity: 0.8 },
-  nameRow: { flexDirection: 'row', alignItems: 'center' },
   productName: { fontSize: 16, fontWeight: '600', color: '#1e293b' },
   productCode: { fontSize: 12, color: '#94a3b8', marginTop: 2 },
   productStats: { alignItems: 'flex-end' },
