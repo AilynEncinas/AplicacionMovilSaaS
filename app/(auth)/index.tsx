@@ -1,7 +1,7 @@
 import { LoginHeader } from '@/components/login/LoginHeader';
 import { CustomInput } from '@/components/ui/CustomInput';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
-import { useAuth } from '@/src/hooks/useAuth'; // Usando el "Controlador"
+import { useAuth } from '@/src/hooks/useAuth';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
 

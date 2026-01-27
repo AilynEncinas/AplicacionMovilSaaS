@@ -18,7 +18,7 @@ export const useAuth = () => {
       if (response.data.success) {
         const { rol } = response.data.user;
         Alert.alert("Éxito", `Bienvenido. Rol: ${rol}`, [
-          { text: "Entrar", onPress: () => router.replace('/report') }
+          { text: "Entrar", onPress: () => router.replace('/(dashboard)/report') }
         ]);
       }
     } catch (error) {
