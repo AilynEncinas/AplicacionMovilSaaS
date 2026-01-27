@@ -8,8 +8,17 @@ const { width } = Dimensions.get('window');
 export const DrawerMenu = ({ visible, onClose }: { visible: boolean, onClose: () => void }) => {
   const router = useRouter();
 
-  const MenuItem = ({ icon: Icon, label }: any) => (
-    <TouchableOpacity style={styles.menuItem} onPress={onClose}>
+  // Actualizamos MenuItem para que use el path y navegue
+  const MenuItem = ({ icon: Icon, label, path }: { icon: any, label: string, path?: string }) => (
+    <TouchableOpacity 
+      style={styles.menuItem} 
+      onPress={() => {
+        onClose(); // Cerramos el menú
+        if (path) {
+          router.push(path as any); // Navegamos a la ruta
+        }
+      }}
+    >
       <Icon size={20} color="#475569" strokeWidth={2} />
       <Text style={styles.menuItemText}>{label}</Text>
     </TouchableOpacity>
@@ -25,10 +34,11 @@ export const DrawerMenu = ({ visible, onClose }: { visible: boolean, onClose: ()
           </View>
 
           <ScrollView style={styles.drawerScroll}>
-            <MenuItem icon={Package} label="Producto" />
-            <MenuItem icon={BarChart3} label="Ventas" />
+            {/* Las rutas no llevan el paréntesis del grupo (dashboard) */}
+            <MenuItem icon={Package} label="Producto" path="/products" />
+            <MenuItem icon={BarChart3} label="Reportes" path="/report" />
             <MenuItem icon={Users} label="Clientes" />
-            {/* ... agrega los demás */}
+            
             <View style={styles.divider} />
             <MenuItem icon={Settings} label="Configuración" />
           </ScrollView>
@@ -38,7 +48,9 @@ export const DrawerMenu = ({ visible, onClose }: { visible: boolean, onClose: ()
             <View style={{ flex: 1, marginLeft: 10 }}>
               <Text style={styles.userName}>Daniela S.</Text>
             </View>
-            <TouchableOpacity onPress={() => router.replace('../app/(auth)/index')}>
+            
+            {/* Logout corregido: apunta a la raíz del grupo (auth) que es el login */}
+            <TouchableOpacity onPress={() => router.replace('/(auth)')}>
               <LogOut size={20} color="#ef4444" />
             </TouchableOpacity>
           </View>

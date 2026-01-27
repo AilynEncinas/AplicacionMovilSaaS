@@ -4,7 +4,8 @@ import { MetricCard } from '@/components/reports/MetricCard';
 import { StockAlerts } from '@/components/reports/StockAlerts';
 import { useReports } from '@/src/hooks/useReports';
 import React, { useState } from 'react';
-import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ReportScreen() {
   const [menuOpen, setMenuOpen] = useState(false);
