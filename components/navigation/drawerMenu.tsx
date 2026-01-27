@@ -34,6 +34,7 @@ export const DrawerMenu = ({ visible, onClose }: { visible: boolean, onClose: ()
 
           <ScrollView style={styles.drawerScroll}>
             <MenuItem icon={Package} label="Inventario" path="/products" />
+            <MenuItem icon={Package} label="Ventas" path="/sales" />
             <MenuItem icon={BarChart3} label="Reportes" path="/report" />
             <MenuItem icon={Users} label="Clientes" />
             
