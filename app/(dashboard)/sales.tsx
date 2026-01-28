@@ -1,4 +1,3 @@
-// app/(dashboard)/sales.tsx
 import apiClient from '@/src/api/client';
 import { useAuth } from '@/src/hooks/useAuth';
 import { useCart } from '@/src/hooks/useCart';
@@ -44,6 +43,9 @@ export default function SalesScreen() {
   const [foundClient, setFoundClient] = useState<any>(null);
   const [isValidatingClient, setIsValidatingClient] = useState(false);
 
+  // --- NUEVO ESTADO PARA EL QR ---
+  const [qrModalVisible, setQrModalVisible] = useState(false);
+
   const filteredProducts = products.filter(p => 
     p.isActive && p.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -69,19 +71,20 @@ export default function SalesScreen() {
     }
   };
 
-  const handleFinalizeSale = async () => {
-    if (!paymentMethod) {
-      Alert.alert("Atención", "Selecciona un método de pago");
-      return;
-    }
+  // --- FUNCIÓN PARA LIMPIAR TODO TRAS LA VENTA ---
+  const resetForm = () => {
+    setModalVisible(false);
+    setQrModalVisible(false);
+    setPaymentMethod(null);
+    setClientNit('');
+    setClientName('');
+    setFoundClient(null);
+    clearCart();
+  };
 
-    if (!clientNit || (!foundClient && !clientName)) {
-      Alert.alert("Atención", "Debe identificar o registrar al cliente");
-      return;
-    }
-
+  // --- LÓGICA DE ENVÍO A LA BASE DE DATOS ---
+  const processSale = async () => {
     setIsProcessing(true);
-
     try {
       let finalClientId = foundClient?.id;
       
@@ -116,17 +119,7 @@ export default function SalesScreen() {
 
       if (response.data.success) {
         Alert.alert("¡Venta Exitosa!", "Venta registrada con éxito.", [
-          { 
-            text: "Finalizar", 
-            onPress: () => {
-              setModalVisible(false);
-              setPaymentMethod(null);
-              setClientNit('');
-              setClientName('');
-              setFoundClient(null);
-              clearCart(); 
-            } 
-          }
+          { text: "Finalizar", onPress: resetForm }
         ]);
       }
     } catch (error: any) {
@@ -134,6 +127,25 @@ export default function SalesScreen() {
       Alert.alert("Error de Venta", errorMsg);
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  // --- MANEJADOR DEL BOTÓN CONFIRMAR ---
+  const handleFinalizeSale = async () => {
+    if (!paymentMethod) {
+      Alert.alert("Atención", "Selecciona un método de pago");
+      return;
+    }
+
+    if (!clientNit || (!foundClient && !clientName)) {
+      Alert.alert("Atención", "Debe identificar o registrar al cliente");
+      return;
+    }
+
+    if (paymentMethod === 'QR') {
+      setQrModalVisible(true); // Abre el modal del QR
+    } else {
+      await processSale(); // Procesa directo si es efectivo
     }
   };
   
@@ -214,6 +226,7 @@ export default function SalesScreen() {
             </View>
         )}
 
+        {/* MODAL 1: DATOS DEL CLIENTE */}
         <Modal animationType="slide" transparent={true} visible={modalVisible}>
           <View style={styles.modalOverlay}>
             <ScrollView contentContainerStyle={styles.modalContent}>
@@ -278,6 +291,36 @@ export default function SalesScreen() {
             </ScrollView>
           </View>
         </Modal>
+
+        {/* MODAL 2: NUEVO MODAL DE PAGO CON QR */}
+        <Modal animationType="fade" transparent={true} visible={qrModalVisible}>
+          <View style={styles.qrModalOverlay}>
+            <View style={styles.qrContainer}>
+              <Text style={styles.qrTitle}>Pago con QR</Text>
+              <Text style={styles.qrSubtitle}>Escanea para pagar Bs {total.toFixed(2)}</Text>
+              
+              <View style={styles.qrImageWrapper}>
+                <Image 
+                  source={{ uri: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=SisToys-Venta-${total}` }} 
+                  style={styles.qrImage} 
+                />
+              </View>
+
+              <TouchableOpacity 
+                style={[styles.btnFinalize, { width: '100%', backgroundColor: '#22c55e' }]} 
+                onPress={processSale} 
+                disabled={isProcessing}
+              >
+                {isProcessing ? <ActivityIndicator color="white" /> : <Text style={styles.btnFinalizeText}>Confirmar Pago</Text>}
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => setQrModalVisible(false)} style={{ marginTop: 15 }}>
+                <Text style={{ color: '#ef4444', fontWeight: 'bold' }}>Cancelar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
     </SafeAreaView>
   );
 }
@@ -326,5 +369,31 @@ const styles = StyleSheet.create({
   btnFinalize: { backgroundColor: '#2563eb', padding: 15, borderRadius: 15, alignItems: 'center' },
   btnFinalizeText: { color: 'white', fontWeight: 'bold', fontSize: 16 },
   btnDisabled: { backgroundColor: '#cbd5e1' },
-  emptyText: { textAlign: 'center', marginTop: 50, color: '#94a3b8' }
+  emptyText: { textAlign: 'center', marginTop: 50, color: '#94a3b8' },
+
+  // --- ESTILOS DEL QR ---
+  qrModalOverlay: { 
+    flex: 1, 
+    backgroundColor: 'rgba(0,0,0,0.7)', 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
+  qrContainer: { 
+    width: '85%', 
+    backgroundColor: 'white', 
+    borderRadius: 30, 
+    padding: 25, 
+    alignItems: 'center' 
+  },
+  qrTitle: { fontSize: 20, fontWeight: 'bold', color: '#1e293b', marginBottom: 5 },
+  qrSubtitle: { fontSize: 14, color: '#64748b', textAlign: 'center', marginBottom: 20 },
+  qrImageWrapper: { 
+    padding: 10, 
+    backgroundColor: 'white', 
+    borderRadius: 20, 
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#f1f5f9'
+  },
+  qrImage: { width: 220, height: 220 },
 });
