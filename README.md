@@ -13,26 +13,25 @@ Este sistema es una solución móvil integral diseñada para optimizar el contro
 Ejecuta los siguientes comandos para configurar todas las dependencias necesarias:
 
 ### Backend & Seguridad
-```bash
+
 npm install cors
 npm install -D @types/cors
 
-## 🛠️ Requisitos de Instalación
 ### Interfaz y Gráficos (Iconos Lucide)
-```bash
+
 npx expo install react-native-svg lucide-react-native
 
 ### Almacenamiento Local
-```bash
+
 npx expo install @react-native-async-storage/async-storage
 
 ### Impresión, Compartir y Notificaciones
-```bash
+
 npx expo install expo-print expo-sharing
 npx expo install expo-notifications
 
 ### Herramientas de Despliegue (EAS)
-```bash
+
 npm install -g eas-cli
 
 ##🚦 Cómo empezar
