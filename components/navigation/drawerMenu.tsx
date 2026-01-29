@@ -37,6 +37,7 @@ export const DrawerMenu = ({ visible, onClose }: { visible: boolean, onClose: ()
             <MenuItem icon={Package} label="Ventas" path="/sales" />
             <MenuItem icon={BarChart3} label="Reportes" path="/report" />
             <MenuItem icon={Users} label="Clientes" path='/clients'/>
+            <MenuItem icon={Users} label="Notificaciones" path='/notifications'/>
             
             <View style={styles.divider} />
             <MenuItem icon={Settings} label="Configuración" />

@@ -10,6 +10,7 @@ export default function RootLayout() {
         <Stack.Screen name="(dashboard)/report" />
         <Stack.Screen name="(dashboard)/products" />
         <Stack.Screen name="(dashboard)/clients" />
+        <Stack.Screen name="(dashboard)/notifications" />
       </Stack>
     </AuthProvider>
   );
