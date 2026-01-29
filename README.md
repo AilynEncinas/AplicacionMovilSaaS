@@ -14,25 +14,25 @@ Ejecuta los siguientes comandos para configurar todas las dependencias necesaria
 
 ### Backend & Seguridad
 
-npm install cors
-npm install -D @types/cors
+* npm install cors
+* npm install -D @types/cors
 
 ### Interfaz y Gráficos (Iconos Lucide)
 
-npx expo install react-native-svg lucide-react-native
+* npx expo install react-native-svg lucide-react-native
 
 ### Almacenamiento Local
 
-npx expo install @react-native-async-storage/async-storage
+* npx expo install @react-native-async-storage/async-storage
 
 ### Impresión, Compartir y Notificaciones
 
-npx expo install expo-print expo-sharing
-npx expo install expo-notifications
+* npx expo install expo-print expo-sharing
+* npx expo install expo-notifications
 
 ### Herramientas de Despliegue (EAS)
 
-npm install -g eas-cli
+* npm install -g eas-cli
 
 ## 🚦 Cómo empezar
 1. Clona este repositorio.
