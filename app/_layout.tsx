@@ -5,10 +5,11 @@ import { LogBox } from 'react-native';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-    shouldShowBanner: true, // Esto hace que aparezca el banner arriba (estilo WhatsApp)
-    shouldShowList: true,   // Esto hace que se mantenga en el centro de notificaciones
+    shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: true,
+    shouldShowBanner: true, 
+    shouldShowList: true,
   }),
 });
 

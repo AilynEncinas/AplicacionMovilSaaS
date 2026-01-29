@@ -6,6 +6,7 @@ export interface Product {
   name: string;
   stock: number;
   price: number;
+  category: string;
   isActive: boolean;
   code: string;
 }
