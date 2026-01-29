@@ -2,8 +2,10 @@ import apiClient from '@/src/api/client';
 import { useAuth } from '@/src/hooks/useAuth';
 import { useCart } from '@/src/hooks/useCart';
 import { useProducts } from '@/src/hooks/useProducts';
+import { sendLocalNotification } from '@/src/services/notificationService';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
+
 import {
   Banknote,
   Image as ImageIcon,
@@ -103,17 +105,15 @@ export default function SalesScreen() {
   };
 
   const processSale = async () => {
-    // Validación de seguridad
     if (cart.length === 0) return;
 
     setIsProcessing(true);
     try {
-      // 1. Construir el objeto de venta
       const saleData = {
         storeId: user?.storeId,
         sellerId: user?.id,
-        clientId: foundClient?.id || null, // ID si existe
-        clientNit: clientNit,              // Datos para el registro si es nuevo
+        clientId: foundClient?.id || null,
+        clientNit: clientNit,
         clientName: clientName,
         total: total,
         paymentMethod: paymentMethod,
@@ -124,10 +124,26 @@ export default function SalesScreen() {
         }))
       };
 
-      // 2. Enviar al backend
       const response = await apiClient.post('/sales', saleData);
 
       if (response.data.success) {
+        // 1. Notificación de Venta Exitosa
+        await sendLocalNotification(
+          "¡Venta Registrada!", 
+          `Se realizó una venta por Bs ${total.toFixed(2)}`
+        );
+
+        // 2. NUEVO: Bucle para notificaciones de Stock Bajo
+        // Si el backend envió alertas de productos que quedaron con <= 5 unidades
+        if (response.data.lowStockAlerts && response.data.lowStockAlerts.length > 0) {
+          for (const prod of response.data.lowStockAlerts) {
+            await sendLocalNotification(
+              "⚠️ Stock Crítico",
+              `El producto "${prod.name}" solo tiene ${prod.stock} unidades.`
+            );
+          }
+        }
+
         Alert.alert(
           "¡Venta Exitosa!", 
           "¿Deseas generar el comprobante de venta?", 
@@ -136,7 +152,7 @@ export default function SalesScreen() {
             { 
               text: "SÍ, GENERAR PDF", 
               onPress: async () => {
-                await generatePDF(saleData); // Ahora saleData sí existe aquí
+                await generatePDF(saleData);
                 resetForm();
               }
             }

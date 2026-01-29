@@ -1,5 +1,16 @@
 import { AuthProvider } from '@/src/context/AuthContext';
+import * as Notifications from 'expo-notifications';
 import { Stack } from 'expo-router';
+import { LogBox } from 'react-native';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true, // Esto hace que aparezca el banner arriba (estilo WhatsApp)
+    shouldShowList: true,   // Esto hace que se mantenga en el centro de notificaciones
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 export default function RootLayout() {
   return (
@@ -15,3 +26,4 @@ export default function RootLayout() {
     </AuthProvider>
   );
 }
+LogBox.ignoreLogs(['expo-notifications', 'Notifications functionality is not fully supported']);
