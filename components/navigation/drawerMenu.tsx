@@ -5,7 +5,6 @@ import {
   Bell,
   LogOut,
   Package,
-  Settings,
   ShoppingBag,
   UserCircle,
   Users
@@ -55,7 +54,7 @@ export const DrawerMenu = ({ visible, onClose }: { visible: boolean, onClose: ()
             <MenuItem icon={Bell} label="Notificaciones" path='/notifications'/>
             
             <View style={styles.divider} />
-            <MenuItem icon={Settings} label="Configuración" />
+            
           </ScrollView>
 
           <View style={styles.drawerFooter}>
