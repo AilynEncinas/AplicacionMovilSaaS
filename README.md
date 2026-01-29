@@ -17,6 +17,7 @@ Ejecuta los siguientes comandos para configurar todas las dependencias necesaria
 npm install cors
 npm install -D @types/cors
 
+## 🛠️ Requisitos de Instalación
 ### Interfaz y Gráficos (Iconos Lucide)
 ```bash
 npx expo install react-native-svg lucide-react-native
