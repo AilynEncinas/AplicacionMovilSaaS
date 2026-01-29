@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://192.168.1.7:3000/api/movil', // Se debe ajustar según la IP de la computadora
+  baseURL: 'https://saas-inventory-sales-management.vercel.app/api/movil',
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' }
 });
