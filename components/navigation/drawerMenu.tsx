@@ -1,5 +1,15 @@
 import { useRouter } from 'expo-router';
-import { BarChart3, LogOut, Package, Settings, UserCircle, Users } from 'lucide-react-native';
+// 1. Importamos Bell y también ShoppingBag para Ventas (se ve mejor que el icono de paquete repetido)
+import {
+  BarChart3,
+  Bell,
+  LogOut,
+  Package,
+  Settings,
+  ShoppingBag,
+  UserCircle,
+  Users
+} from 'lucide-react-native';
 import React from 'react';
 import { Dimensions, Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -34,10 +44,13 @@ export const DrawerMenu = ({ visible, onClose }: { visible: boolean, onClose: ()
 
           <ScrollView style={styles.drawerScroll}>
             <MenuItem icon={Package} label="Inventario" path="/products" />
-            <MenuItem icon={Package} label="Ventas" path="/sales" />
+            {/* Opcional: Cambié Package por ShoppingBag para diferenciar Ventas */}
+            <MenuItem icon={ShoppingBag} label="Ventas" path="/sales" />
             <MenuItem icon={BarChart3} label="Reportes" path="/report" />
             <MenuItem icon={Users} label="Clientes" path='/clients'/>
-            <MenuItem icon={Users} label="Notificaciones" path='/notifications'/>
+            
+            {/* 2. Aquí aplicamos el icono de Bell (Campana) */}
+            <MenuItem icon={Bell} label="Notificaciones" path='/notifications'/>
             
             <View style={styles.divider} />
             <MenuItem icon={Settings} label="Configuración" />
