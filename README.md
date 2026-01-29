@@ -34,8 +34,7 @@ npx expo install expo-notifications
 
 npm install -g eas-cli
 
-##🚦 Cómo empezar
-
+## 🚦 Cómo empezar
 1. Clona este repositorio.
 2. Instala las dependencias mencionadas arriba.
 3. Inicia el proyecto con npx expo start.
