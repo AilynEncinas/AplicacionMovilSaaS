@@ -63,13 +63,28 @@ export default function SalesScreen() {
         nit: clientNit, 
         storeId: user?.storeId 
       });
+
       if (response.data.success) {
-        setFoundClient(response.data.client);
-        setClientName(response.data.client.name);
+        const client = response.data.client;
+
+        // VALIDACIÓN DE CLIENTE ACTIVO
+        if (client.isActive === false) {
+          setFoundClient(null);
+          setClientName('');
+          Alert.alert(
+            "Cliente Inactivo", 
+            "Este cliente se encuentra desactivado y no puede realizar compras. Por favor, actívelo desde la sección de Clientes."
+          );
+        } else {
+          // Cliente encontrado y activo
+          setFoundClient(client);
+          setClientName(client.name);
+        }
       }
     } catch (error: any) {
       setFoundClient(null);
       setClientName('');
+      // Si el error es 404 o similar, asumimos que es nuevo
       Alert.alert("Nuevo Cliente", "NIT no encontrado. Ingrese el nombre para registrarlo.");
     } finally {
       setIsValidatingClient(false);
@@ -377,7 +392,19 @@ export default function SalesScreen() {
             <View style={styles.inputGroup}>
               <Text style={styles.label}>NIT / CI</Text>
               <View style={styles.searchBar}>
-                <TextInput style={styles.searchInput} placeholder="NIT..." keyboardType="numeric" value={clientNit} onChangeText={setClientNit} />
+                <TextInput 
+                  style={styles.searchInput} 
+                  placeholder="NIT..." 
+                  keyboardType="numeric" 
+                  value={clientNit} 
+                  onChangeText={(text) => {
+                    setClientNit(text);
+                    if (foundClient) {
+                      setFoundClient(null);
+                      setClientName('');
+                    }
+                  }} 
+                />
                 <TouchableOpacity onPress={handleSearchClient} disabled={isValidatingClient}>
                   {isValidatingClient ? <ActivityIndicator size="small" color="#2563eb" /> : <Search size={20} color="#2563eb" />}
                 </TouchableOpacity>
