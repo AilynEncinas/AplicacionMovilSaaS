@@ -1,11 +1,18 @@
 import apiClient from '@/src/api/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Alert } from 'react-native';
+import { AuthContext } from '../context/AuthContext';
 
 export const useAuth = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const context = useContext(AuthContext);
+
+  if (!context) throw new Error('useAuth debe estar dentro de un AuthProvider');
+
+  const { user, setUser } = context;
 
   const login = async (email: string, password: string) => {
     setLoading(true);
@@ -16,17 +23,38 @@ export const useAuth = () => {
       });
 
       if (response.data.success) {
-        const { rol } = response.data.user;
-        Alert.alert("Éxito", `Bienvenido. Rol: ${rol}`, [
+        const userData = response.data.user;
+
+        const loggedUser = {
+          id: userData.id,
+          name: userData.name || "Usuario",
+          role: userData.rol || userData.role || "usuario",
+          storeId: userData.storeId || userData.id_microempresa 
+        };
+
+        if (!loggedUser.storeId) {
+          console.warn("No existe storeId asociado al usuario");
+        }
+
+        setUser(loggedUser);
+        await AsyncStorage.setItem('@user', JSON.stringify(loggedUser));
+
+        Alert.alert("Éxito", `Bienvenido ${loggedUser.name}`, [
           { text: "Entrar", onPress: () => router.replace('/(dashboard)/report') }
         ]);
       }
-    } catch (error) {
-      Alert.alert("Error", "Correo o contraseña incorrectos");
+    } catch (error: any) {
+      Alert.alert("Error", "Credenciales incorrectas");
     } finally {
       setLoading(false);
     }
   };
 
-  return { login, loading };
+  const logout = async () => {
+    await AsyncStorage.removeItem('@user');
+    setUser(null);
+    router.replace('/(auth)');
+  };
+
+  return { login, logout, loading, user, isAuthenticated: !!user };
 };
